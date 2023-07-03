@@ -1,9 +1,9 @@
 ﻿//Nhập tên
 Console.WriteLine("Nhập họ và tên:");
-Console.WriteLine("Nhập tuổi:");
-
 string hoTen = Console.ReadLine();
-string tuoi = Console.ReadLine();
 
-Console.WriteLine("Họ và tên của bạn là: " + hoTen);
-Console.WriteLine("Tuổi:" + tuoi);
+Console.WriteLine("Nhập tuổi:");
+int tuoi = Convert.ToInt32(Console.ReadLine());
+
+string ketQua = string.Format("Tên bạn là {0}, {1} tuổi chẳng hạn", hoTen, tuoi);
+Console.WriteLine(ketQua);
