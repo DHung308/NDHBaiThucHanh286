@@ -214,3 +214,42 @@ internal class Program
       }
     }
 }   
+
+//Xay dung chuong trinh cho phep nhap tt sinh vien va diem cac mon hoc sinh vien va tinh diem cac mon hoc
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Nhập mã số sinh viên:");
+        string maSV = Console.ReadLine();
+
+        Console.WriteLine("Nhập tên sinh viên:");
+        string tenSV = Console.ReadLine();
+
+        Console.WriteLine("Nhập điểm môn Toán:");
+        double diemToan = double.Parse(Console.ReadLine());
+
+        Console.WriteLine("Nhập điểm môn Văn:");
+        double diemVan = double.Parse(Console.ReadLine());
+
+        Console.WriteLine("Nhập điểm môn Anh:");
+        double diemAnh = double.Parse(Console.ReadLine());
+
+        Console.WriteLine("Nhập điểm môn Sử:");
+        double diemSu = double.Parse(Console.ReadLine());
+
+        Console.WriteLine("Nhập điểm môn Địa:");
+        double diemDia = double.Parse(Console.ReadLine());
+
+        double diemTrungBinh = (diemToan + diemVan + diemAnh + diemSu + diemDia) / 5;
+
+        Console.WriteLine("Mã số sinh viên: " + maSV);
+        Console.WriteLine("Tên sinh viên: " + tenSV);
+        Console.WriteLine("Điểm trung bình: " + diemTrungBinh.ToString("0.00"));
+
+        Console.ReadLine();
+    }
+}
