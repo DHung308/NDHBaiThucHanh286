@@ -15,6 +15,7 @@ namespace MathApp.Models
             }
             else
             {
+                
                 double x = -b / a;
                 return $"Nghiệm của phương trình là x = {x}.";
             }
