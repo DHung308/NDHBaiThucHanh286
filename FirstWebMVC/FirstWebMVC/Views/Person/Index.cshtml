@@ -1,20 +1,53 @@
-﻿<h1> Person</h1>
+﻿@model IEnumerable<FirstWebMVC.Models.Person>
 
-<form asp-action="Index">
-    <Label>ID :</Label>
-    <input type="text" name="ID" />
-    <br />
-    <label>Họ và tên :</label>
-    <input type="text" name="FullName" />
-    <br />
-    <label>Địa chỉ :</label>
-    <input type="text" name="DiaChi" />
-    <br />
-    <label>Ngày sinh :</label>
-    <input type="text" name="SinhNhat" />
-    <br />
-    <input type="submit" value="Gửi" class="btn btn-success" />
+@{
+    ViewData["Title"] = "Index";
+}
 
-    <h3>@ViewBag.thongBao</h3>
+<h1>Index</h1>
 
-</form>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+               Họ và tên
+            </th>
+            <th>
+               Địa chỉ
+            </th>
+            <th>
+               Sinh nhật
+            </th
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiaChi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SinhNhat)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
