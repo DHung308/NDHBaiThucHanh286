@@ -1,0 +1,20 @@
+﻿<h1> Person</h1>
+
+<form asp-action="Index">
+    <Label>ID :</Label>
+    <input type="text" name="ID" />
+    <br />
+    <label>Họ và tên :</label>
+    <input type="text" name="FullName" />
+    <br />
+    <label>Địa chỉ :</label>
+    <input type="text" name="DiaChi" />
+    <br />
+    <label>Ngày sinh :</label>
+    <input type="text" name="SinhNhat" />
+    <br />
+    <input type="submit" value="Gửi" class="btn btn-success" />
+
+    <h3>@ViewBag.thongBao</h3>
+
+</form>
