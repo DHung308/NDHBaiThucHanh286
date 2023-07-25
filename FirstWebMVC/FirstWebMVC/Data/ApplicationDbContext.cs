@@ -17,5 +17,11 @@ namespace FirstWebMVC.Data
         public DbSet<FirstWebMVC.Models.Person> Person { get; set; } = default!;
 
         public DbSet<FirstWebMVC.Models.Employee> Employee { get; set; } = default!;
+
+        public DbSet<FirstWebMVC.Models.Animal> Animal { get; set; } = default!;
+
+        public DbSet<FirstWebMVC.Models.Cat> Cat { get; set; } = default!;
+
+        public DbSet<FirstWebMVC.Models.Dog> Dog { get; set; } = default!;
     }
 }
