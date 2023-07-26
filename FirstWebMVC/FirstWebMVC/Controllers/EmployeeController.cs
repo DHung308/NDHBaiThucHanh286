@@ -7,12 +7,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FirstWebMVC.Data;
 using FirstWebMVC.Models;
+using FirstWebMVC.Models.Process;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Data;
+using OfficeOpenXml;
 
 namespace FirstWebMVC.Controllers
 {
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private ExcelProcess _excelProcess = new ExcelProcess();
 
         public EmployeeController(ApplicationDbContext context)
         {
@@ -22,10 +27,11 @@ namespace FirstWebMVC.Controllers
         // GET: Employee
         public async Task<IActionResult> Index()
         {
-              return _context.Employee != null ? 
-                          View(await _context.Employee.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Employee'  is null.");
+            return _context.Employee != null ?
+                        View(await _context.Employee.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Employee'  is null.");
         }
+
 
         // GET: Employee/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -150,14 +156,58 @@ namespace FirstWebMVC.Controllers
             {
                 _context.Employee.Remove(employee);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EmployeeExists(int id)
         {
-          return (_context.Employee?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Employee?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        //Êxcel
+        public async Task<IActionResult> Upload()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if (file != null)
+            {
+                string fileExtension = Path.GetExtension(file.FileName);
+                if (fileExtension != ".xls" && fileExtension != "xlsx")
+                {
+                    ModelState.AddModelError("", "Chọn file Excel để tải lên");
+                }
+                else
+                {
+                    var fileName = DateTime.Now.ToShortTimeString() + fileExtension;
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory() + "Uploads", fileName);
+                    var fileLocation = new FileInfo(filePath).ToString();
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        //Luu tep toi sever
+                        await file.CopyToAsync(stream);
+
+                        var dt = _excelProcess.ExcelToDataTable(fileLocation);
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            var emp = new Employee();
+                            emp.Id = (int)dt.Rows[i][0];
+                            emp.FullName = dt.Rows[i][1].ToString();
+                            emp.DiaChi = dt.Rows[i][2].ToString();
+
+                            _context.Employee.Add(emp);
+                        }
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            return View();
         }
     }
 }

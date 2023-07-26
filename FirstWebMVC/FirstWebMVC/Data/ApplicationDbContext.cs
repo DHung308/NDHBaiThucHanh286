@@ -23,5 +23,8 @@ namespace FirstWebMVC.Data
         public DbSet<FirstWebMVC.Models.Cat> Cat { get; set; } = default!;
 
         public DbSet<FirstWebMVC.Models.Dog> Dog { get; set; } = default!;
+        public DbSet<FirstWebMVC.Models.Faculty> Faculty { get; set; } = default!;
+        public DbSet<FirstWebMVC.Models.Student> Student { get; set; } = default!;
+
     }
 }

@@ -1,6 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using FirstWebMVC.Data;
+using OfficeOpenXml;
+
+void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+
+
+    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+
+}
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContext' not found.")));

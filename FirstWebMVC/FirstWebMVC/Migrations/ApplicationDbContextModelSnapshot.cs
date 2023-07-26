@@ -56,6 +56,20 @@ namespace FirstWebMVC.Migrations
                     b.ToTable("NhanVien");
                 });
 
+            modelBuilder.Entity("FirstWebMVC.Models.Faculty", b =>
+                {
+                    b.Property<string>("FacultyID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FacultyName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("FacultyID");
+
+                    b.ToTable("Faculty");
+                });
+
             modelBuilder.Entity("FirstWebMVC.Models.Person", b =>
                 {
                     b.Property<int>("ID")
@@ -78,6 +92,26 @@ namespace FirstWebMVC.Migrations
                     b.ToTable("Person");
                 });
 
+            modelBuilder.Entity("FirstWebMVC.Models.Student", b =>
+                {
+                    b.Property<string>("StudentID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FacultyID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StudentName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("StudentID");
+
+                    b.HasIndex("FacultyID");
+
+                    b.ToTable("Student");
+                });
+
             modelBuilder.Entity("FirstWebMVC.Models.Cat", b =>
                 {
                     b.HasBaseType("FirstWebMVC.Models.Animal");
@@ -98,6 +132,17 @@ namespace FirstWebMVC.Migrations
                         .HasColumnType("TEXT");
 
                     b.ToTable("Dog");
+                });
+
+            modelBuilder.Entity("FirstWebMVC.Models.Student", b =>
+                {
+                    b.HasOne("FirstWebMVC.Models.Faculty", "Faculty")
+                        .WithMany()
+                        .HasForeignKey("FacultyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
                 });
 
             modelBuilder.Entity("FirstWebMVC.Models.Cat", b =>
