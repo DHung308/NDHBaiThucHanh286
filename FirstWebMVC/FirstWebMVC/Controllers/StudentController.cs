@@ -14,10 +14,12 @@ namespace FirstWebMVC.Controllers
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly StringProcess _stringProcess;
 
         public StudentController(ApplicationDbContext context)
         {
             _context = context;
+            _stringProcess = new StringProcess();
         }
 
         // GET: Student
@@ -25,22 +27,6 @@ namespace FirstWebMVC.Controllers
         {
             var applicationDbContext = _context.Student.Include(s => s.Faculty);
             return View(await applicationDbContext.ToListAsync());
-        }
-        private List<Student> _students = new List<Student>();
-
-        // Hàm kiểm tra và sinh mã tự động cho sinh viên mới
-        public string AutoGenerateStudentCode()
-        {
-            if (_students.Count == 0)
-            {
-                return "STD001";
-            }
-            else
-            {
-                string lastStudentID = _students.OrderByDescending(s => s.StudentID).First().StudentID;
-                StringProcess stringProcess = new StringProcess();
-                return stringProcess.AutoGenerateCode(lastStudentID, _students.Select(s => s.StudentID).ToList());
-            }
         }
 
         // GET: Student/Details/5
@@ -66,12 +52,28 @@ namespace FirstWebMVC.Controllers
         public IActionResult Create()
         {
             ViewData["FacultyID"] = new SelectList(_context.Faculty, "FacultyID", "FacultyName");
-            return View();
+
+            // Kiểm tra xem đã có dữ liệu hay chưa
+            string newStudentCode;
+            if (_context.Student.Any())
+            {
+                // Nếu đã có dữ liệu, lấy ra bản ghi mới nhất và lấy mã của đối tượng
+                var lastStudent = _context.Student.OrderByDescending(s => s.StudentID).First();
+                newStudentCode = _stringProcess.AutoGenerateCode(lastStudent.StudentID);
+            }
+            else
+            {
+                // Nếu chưa có dữ liệu, gán mã đầu tiên cho đối tượng
+                newStudentCode = "STD001";
+            }
+
+            // Gán mã mới vào ViewBag để hiển thị lên giao diện
+            ViewBag.NewStudentCode = newStudentCode;
+
+            // Trả về View để tạo sinh viên mới
+            return View(new Student { StudentID = newStudentCode });
         }
 
-        // POST: Student/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StudentID,StudentName,FacultyID")] Student student)
@@ -83,23 +85,6 @@ namespace FirstWebMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["FacultyID"] = new SelectList(_context.Faculty, "FacultyID", "FacultyName", student.FacultyID);
-            return View(student);
-        }
-
-        // GET: Student/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null || _context.Student == null)
-            {
-                return NotFound();
-            }
-
-            var student = await _context.Student.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            ViewData["FacultyID"] = new SelectList(_context.Faculty, "FacultyID", "FacultyID", student.FacultyID);
             return View(student);
         }
 
@@ -172,14 +157,14 @@ namespace FirstWebMVC.Controllers
             {
                 _context.Student.Remove(student);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StudentExists(string id)
         {
-          return (_context.Student?.Any(e => e.StudentID == id)).GetValueOrDefault();
+            return (_context.Student?.Any(e => e.StudentID == id)).GetValueOrDefault();
         }
     }
 }

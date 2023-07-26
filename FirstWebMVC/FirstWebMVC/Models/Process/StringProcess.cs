@@ -4,7 +4,7 @@ namespace FirstWebMVC.Models.Process
 {
     public class StringProcess
     {
-        public String AutoGenerateCode(string strInput, List<string> list)
+        public String AutoGenerateCode(string strInput)
         {
             string strResult = "", numPart = "", strPart = "";
             //tach phan so tu strInput
@@ -12,7 +12,7 @@ namespace FirstWebMVC.Models.Process
             //tach phan tu chu
             strPart = Regex.Match(strInput, @"\D+").Value;
             //tang phan so len 1 don vi
-            int intPart = (Convert.ToInt32(strPart) + 1);
+            int intPart = (Convert.ToInt32(numPart) + 1);
             //bo sung cac ky tu 0 con thieu
             for (int i = 0; i < numPart.Length - intPart.ToString().Length; i++)
             {
